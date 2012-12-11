@@ -89,11 +89,15 @@ class Zendesk2::Client < Cistern::Service
       password           = options[:password] || Zendesk2.defaults[:password]
       @token             = options[:token]
 
-      raise "Missing required options: [:username, :password]" unless @username && password
+      raise "Missing required options: [:username, :password]" unless @username && (password || @token)
 
       @connection = Faraday.new({url: @url}.merge(connection_options)) do |builder|
         # response
-        builder.use Faraday::Request::BasicAuthentication, @username, password
+        if @token
+          builder.use Faraday::Request::BasicAuthentication, "#{@username}/token", @token
+        else
+          builder.use Faraday::Request::BasicAuthentication, @username, password
+        end
         builder.use Faraday::Response::RaiseError
         builder.response :json
 

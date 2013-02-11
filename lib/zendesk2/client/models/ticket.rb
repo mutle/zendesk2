@@ -1,7 +1,7 @@
 class Zendesk2::Client::Ticket < Zendesk2::Model
   extend Zendesk2::Attributes
 
-  PARAMS = %w[external_id via requester_id submitter_id assignee_id organization_id subject description fields recipient status collaborator_ids]
+  PARAMS = %w[external_id via requester_id submitter_id assignee_id organization_id subject description custom_fields recipient status collaborator_ids]
 
   identity :id,                type: :id
   attribute :external_id
@@ -25,7 +25,7 @@ class Zendesk2::Client::Ticket < Zendesk2::Model
   attribute :has_incidents,    type: :boolean
   attribute :due_at,           type: :time
   attribute :tags,             type: :array
-  attribute :fields,           type: :array
+  attribute :custom_fields,    type: :array
 
   assoc_reader :organization
   assoc_accessor :requester, collection: :users
